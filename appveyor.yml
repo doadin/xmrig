@@ -1,0 +1,65 @@
+# build only tags
+skip_non_tags: false
+
+# image
+image: 
+- Visual Studio 2017
+- Ubuntu
+
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
+
+# build platform
+platform: x64
+configuration: Release
+
+# clone directory
+#clone_folder: c:\xmrig
+for:
+-
+    matrix:
+      only:
+        - image: Visual Studio 2017
+    clone_folder: c:\xmrig
+-
+    matrix:
+      only:
+        - image: Ubuntu
+    clone_folder: /home/appveyor/projects/xmrig
+
+install:
+  - cmd: mkdir c:\xmrig-deps
+  - cmd: curl -sL https://github.com/xmrig/xmrig-deps/archive/v3.5.zip -o xmrig-deps-3.5.zip
+  - cmd: 7z x xmrig-deps-3.5.zip -o"c:\" -y
+  
+  - sh: mkdir /home/appveyor/projects/xmrig-deps
+  - sh: curl -sL https://github.com/xmrig/xmrig-deps/archive/v3.5.zip -o xmrig-deps-3.5.zip
+  - sh: unzip xmrig-deps-3.5.zip -d /home/appveyor/projects
+  - sh: sudo apt-get update
+  - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
+
+build_script:
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsMSBuildCmd.bat"
+  - cmd: cd c:\xmrig
+  - cmd: mkdir build
+  - cmd: cd build
+  - cmd: set CMAKE_PREFIX_PATH=c:\xmrig-deps-3.5\msvc2017\x64\
+  - cmd: cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-3.5\msvc2017\x64 
+  - cmd: msbuild xmrig.sln /p:Configuration=Release
+  
+  - sh: cd /home/appveyor/projects/xmrig
+  - sh: mkdir build
+  - sh: cd build
+  - sh: cmake .. -DBUILD_STATIC=ON
+  - sh: make
+
+test_script:
+  - cmd: cd c:\xmrig
+  - cmd: 7z a c:\xmrig\xmrig-msvc-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json"
+  
+  - sh: cd /home/appveyor/projects/xmrig
+  - sh: 7z a xmrig-linux.zip /home/appveyor/projects/xmrig/build/xmrig /home/appveyor/projects/xmrig/src/config.json
+
+artifacts:
+  - path: xmrig-msvc-win64.zip
+  - path: xmrig-linux.zip
