@@ -3,7 +3,7 @@ skip_non_tags: false
 
 # image
 image: 
-- Visual Studio 2017
+- Visual Studio 2019
 - Ubuntu
 
 environment:
@@ -19,7 +19,7 @@ for:
 -
     matrix:
       only:
-        - image: Visual Studio 2017
+        - image: Visual Studio 2019
     clone_folder: c:\xmrig
 -
     matrix:
@@ -39,12 +39,12 @@ install:
   - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
 
 build_script:
-  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsMSBuildCmd.bat"
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsMSBuildCmd.bat"
   - cmd: cd c:\xmrig
   - cmd: mkdir build
   - cmd: cd build
   - cmd: set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2017\x64\
-  - cmd: cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2017\x64 
+  - cmd: cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2019\x64 
   - cmd: msbuild xmrig.sln /p:Configuration=Release
   
   - sh: cd /home/appveyor/projects/xmrig
