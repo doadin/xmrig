@@ -45,7 +45,7 @@ build_script:
   - cmd: cd build
   - cmd: set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2017\x64\
   - cmd: cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2019\x64 
-  - cmd: msbuild xmrig.sln /p:Configuration=Release
+  - cmd: msbuild xmrig.sln /p:Configuration=Release -m
   
   - sh: cd /home/appveyor/projects/xmrig
   - sh: mkdir build
