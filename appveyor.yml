@@ -29,12 +29,12 @@ for:
 
 install:
   - cmd: mkdir c:\xmrig-deps
-  - cmd: curl -sL https://github.com/xmrig/xmrig-deps/archive/v3.5.zip -o xmrig-deps-3.5.zip
-  - cmd: 7z x xmrig-deps-3.5.zip -o"c:\" -y
+  - cmd: curl -sL https://github.com/xmrig/xmrig-deps/archive/v4.0.zip -o xmrig-deps-4.0.zip
+  - cmd: 7z x xmrig-deps-4.0.zip -o"c:\" -y
   
   - sh: mkdir /home/appveyor/projects/xmrig-deps
-  - sh: curl -sL https://github.com/xmrig/xmrig-deps/archive/v3.5.zip -o xmrig-deps-3.5.zip
-  - sh: unzip xmrig-deps-3.5.zip -d /home/appveyor/projects
+  - sh: curl -sL https://github.com/xmrig/xmrig-deps/archive/v4.0.zip -o xmrig-deps-4.0.zip
+  - sh: unzip xmrig-deps-4.0.zip -d /home/appveyor/projects
   - sh: sudo apt-get update
   - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
 
@@ -43,8 +43,8 @@ build_script:
   - cmd: cd c:\xmrig
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: set CMAKE_PREFIX_PATH=c:\xmrig-deps-3.5\msvc2017\x64\
-  - cmd: cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-3.5\msvc2017\x64 
+  - cmd: set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2017\x64\
+  - cmd: cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2017\x64 
   - cmd: msbuild xmrig.sln /p:Configuration=Release
   
   - sh: cd /home/appveyor/projects/xmrig
