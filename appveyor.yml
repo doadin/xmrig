@@ -4,6 +4,7 @@ skip_non_tags: false
 # image
 image: 
 - Visual Studio 2019
+- Visual Studio 2017
 - Ubuntu
 
 environment:
@@ -24,6 +25,11 @@ for:
 -
     matrix:
       only:
+        - image: Visual Studio 2017
+    clone_folder: c:\xmrig
+-
+    matrix:
+      only:
         - image: Ubuntu
     clone_folder: /home/appveyor/projects/xmrig
 
@@ -39,12 +45,15 @@ install:
   - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
 
 build_script:
-  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsMSBuildCmd.bat"
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsMSBuildCmd.bat")
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: cd c:\xmrig
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2017\x64\
-  - cmd: cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2019\x64 
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2019\x64\)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2017\x64\)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2019\x64)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2017\x64)
   - cmd: msbuild xmrig.sln /p:Configuration=Release -m
   
   - sh: cd /home/appveyor/projects/xmrig
@@ -55,11 +64,12 @@ build_script:
 
 test_script:
   - cmd: cd c:\xmrig
-  - cmd: 7z a c:\xmrig\xmrig-msvc-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json"
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (7z a c:\xmrig\xmrig-msvc2019-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json")
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (7z a c:\xmrig\xmrig-msvc2017-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json")
   
   - sh: cd /home/appveyor/projects/xmrig
   - sh: 7z a xmrig-linux.zip /home/appveyor/projects/xmrig/build/xmrig /home/appveyor/projects/xmrig/src/config.json
 
 artifacts:
-  - path: xmrig-msvc-win64.zip
+  - path: xmrig-msvc*-win64.zip
   - path: xmrig-linux.zip
