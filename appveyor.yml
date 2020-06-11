@@ -35,12 +35,12 @@ for:
 
 install:
   - cmd: mkdir c:\xmrig-deps
-  - cmd: curl -sL https://github.com/xmrig/xmrig-deps/archive/v4.0.zip -o xmrig-deps-4.0.zip
-  - cmd: 7z x xmrig-deps-4.0.zip -o"c:\" -y
+  - cmd: curl -sL https://github.com/xmrig/xmrig-deps/archive/v4.1.zip -o xmrig-deps-4.1.zip
+  - cmd: 7z x xmrig-deps-4.1.zip -o"c:\" -y
   
   - sh: mkdir /home/appveyor/projects/xmrig-deps
-  - sh: curl -sL https://github.com/xmrig/xmrig-deps/archive/v4.0.zip -o xmrig-deps-4.0.zip
-  - sh: unzip xmrig-deps-4.0.zip -d /home/appveyor/projects
+  - sh: curl -sL https://github.com/xmrig/xmrig-deps/archive/v4.1.zip -o xmrig-deps-4.1.zip
+  - sh: unzip xmrig-deps-4.1.zip -d /home/appveyor/projects
   - sh: sudo apt-get update
   - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
 
@@ -50,10 +50,10 @@ build_script:
   - cmd: cd c:\xmrig
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2019\x64\)
-  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.0\msvc2017\x64\)
-  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2019\x64)
-  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-4.0\msvc2017\x64)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.1\msvc2019\x64\)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-4.1\msvc2017\x64\)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-4.1\msvc2019\x64)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-4.1\msvc2017\x64)
   - cmd: msbuild xmrig.sln /p:Configuration=Release -m
   
   - sh: cd /home/appveyor/projects/xmrig
