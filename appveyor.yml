@@ -3,6 +3,7 @@ skip_non_tags: false
 
 # image
 image: 
+- Visual Studio 2022
 - Visual Studio 2019
 - Visual Studio 2017
 - Ubuntu
@@ -17,6 +18,11 @@ configuration: Release
 # clone directory
 #clone_folder: c:\xmrig
 for:
+-
+    matrix:
+      only:
+        - image: Visual Studio 2022
+    clone_folder: c:\xmrig
 -
     matrix:
       only:
@@ -45,13 +51,16 @@ install:
   - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
 
 build_script:
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: cd c:\xmrig
   - cmd: mkdir build
   - cmd: cd build
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-master\msvc2019\x64\)
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-master\msvc2019\x64\)
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (set CMAKE_PREFIX_PATH=c:\xmrig-deps-master\msvc2017\x64\)
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (cmake .. -G "Visual Studio 17 2022" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-master\msvc2019\x64)
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (cmake .. -G "Visual Studio 16 2019" -A x64 -DXMRIG_DEPS=c:\xmrig-deps-master\msvc2019\x64)
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (cmake .. -G "Visual Studio 15 2017 Win64" -DXMRIG_DEPS=c:\xmrig-deps-master\msvc2017\x64)
   - cmd: msbuild xmrig.sln /p:Configuration=Release -m
@@ -64,6 +73,7 @@ build_script:
 
 test_script:
   - cmd: cd c:\xmrig
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (7z a c:\xmrig\xmrig-msvc2022-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json")
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (7z a c:\xmrig\xmrig-msvc2019-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json")
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (7z a c:\xmrig\xmrig-msvc2017-win64.zip "c:\xmrig\build\Release\*.exe" "c:\xmrig\src\config.json")
   
