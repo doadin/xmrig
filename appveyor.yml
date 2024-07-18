@@ -59,7 +59,7 @@ build_script:
   - sh: cd /home/appveyor/projects/xmrig
   - sh: mkdir build
   - sh: cd build
-  - sh: cmake .. -DBUILD_STATIC=ON
+  - sh: cmake ..
   - sh: make
 
 test_script:
