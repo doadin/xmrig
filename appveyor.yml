@@ -51,7 +51,7 @@ install:
   - sh: sudo apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev libhwloc-dev
 
 build_script:
-  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\Common7\Tools\VsMSBuildCmd.bat")
+  - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsMSBuildCmd.bat")
   - cmd: cd c:\xmrig
